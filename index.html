@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<head>
+  <title>Electron Auto Update Example</title>
+  <style>
+    body {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 20px;
+      font-family: sans-serif;
+      background-color: #eaeaea;
+      text-align: center;
+    }
+
+    #notification {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      width: 200px;
+      padding: 20px;
+      border-radius: 5px;
+      background-color: white;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    }
+    .hidden {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <h1>Electron Auto Update Example</h1>
+  <p id="version"></p>
+  <script>
+    const { ipcRenderer } = require("electron");
+    const version = document.getElementById("version");
+
+    ipcRenderer.send("appVersion");
+    ipcRenderer.on("appVersion", (event, arg) => {
+      ipcRenderer.removeAllListeners("appVersion");
+      version.innerText = "현재 앱 버전 " + arg.version;
+    });
+  </script>
+
+  <div id="notification" class="hidden">
+    <p id="message"></p>
+    <button id="close-button" onClick="closeNotification()">
+      Close
+    </button>
+    <button id="restart-button" onClick="restartApp()" class="hidden">
+      Restart
+    </button>
+  </div>
+
+  <script>
+    const notification = document.getElementById("notification");
+    const message = document.getElementById("message");
+    const restartButton = document.getElementById("restart-button");
+    ipcRenderer.on("update_available", () => {
+      ipcRenderer.removeAllListeners("update_available");
+      message.innerText = "새로운 버전 다운로드 중...";
+      notification.classList.remove("hidden");
+    });
+    ipcRenderer.on("update_downloaded", () => {
+      ipcRenderer.removeAllListeners("update_downloaded");
+      message.innerText = "다운로드 완료. 재시작 하세요. Restart now?";
+      restartButton.classList.remove("hidden");
+      notification.classList.remove("hidden");
+    });
+
+    function closeNotification() {
+      notification.classList.add("hidden");
+    }
+    function restartApp() {
+      ipcRenderer.send("restart_app");
+    }
+  </script>
+</body>
