@@ -1,4 +1,4 @@
 appId: com.adflow.ElectronAutoUpdate
 publish:
   provider: github
-  token: 782c7e2120eb03eb411c782c2c0bc8029f53aca2
+  token: 0eeb4bade1aaa941bf03e476690ca3f79d0c028e
