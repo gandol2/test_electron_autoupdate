@@ -19,7 +19,7 @@
     "url": "https://github.com/gandol2/test_electron_autoupdate.git"
   },
   "devDependencies": {
-    "electron": "^7.1.1",
+    "electron": "^7.2.4",
     "electron-builder": "^22.1.0"
   }
 }
